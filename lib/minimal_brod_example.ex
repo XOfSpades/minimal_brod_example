@@ -24,15 +24,13 @@ defmodule MinimalBrodExample do
         brod_client_config
       )
 
-    IO.puts("Client pid: #{:global.whereis_name(@brod_client)}")
-
     consumer_config = [{:begin_offset, :earliest}]
 
     # Define workers and child supervisors to be supervised
     children = [
-      worker(
-        :brod_group_subscriber,
-        [@brod_client, "foo", ["test_partition"], [], [], MinimalBrodExample.ConsumerMsgHandler, []]
+      supervisor(
+        MinimalBrodExample.ConsumerSupervisor,
+        [[topics: ["test_topic"]]]
       )
     ]
 
