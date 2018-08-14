@@ -20,16 +20,13 @@ defmodule MinimalBrodExample do
     kafka_endpoints = [{'test-kafka-s', 38222}]
 
     # Start basic brod client
-    :ok =
+    spawn(fn ->
       :brod.start_client(
         kafka_endpoints,
         @brod_client,
         brod_client_config
       )
-
-    IO.puts "Start producer"
-    :ok = :brod.start_producer(@brod_client, @topic, [])
-
+    end)
 
     spawn(
       fn ->
@@ -37,7 +34,7 @@ defmodule MinimalBrodExample do
 
         {:ok, pid} = :brod.get_producer(@brod_client, @topic, 0)
 
-        :brod.produce(pid, "msg1", "my first message") |> IO.inspect
+        :brod.produce(pid, "msg1", %{ts: 1534250000000, key: "meta_key", value: "testtesttest"}) |> IO.inspect
 
         IO.inspect "Produce message:"
         :brod.produce(@brod_client, @topic, 0, "msg3", "my last message")
