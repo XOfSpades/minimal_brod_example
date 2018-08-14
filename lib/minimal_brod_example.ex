@@ -4,6 +4,7 @@ defmodule MinimalBrodExample do
   @brod_client :brod_kafka_base_server
 
   @topic "test_topic"
+  @consumer_group "foobar"
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
@@ -16,7 +17,7 @@ defmodule MinimalBrodExample do
       {:restart_delay_seconds, 1}
     ]
 
-    kafka_endpoints = [{'192.168.2.110', 38222}]
+    kafka_endpoints = [{'test-kafka-s', 38222}]
 
     # Start basic brod client
     :ok =
@@ -29,10 +30,18 @@ defmodule MinimalBrodExample do
     IO.puts "Start producer"
     :ok = :brod.start_producer(@brod_client, @topic, [])
 
+
     spawn(
       fn ->
-        :timer.sleep(5000)
-        :brod.produce_sync_offset(@brod_client, @topic, 0, "", "test message")
+        :timer.sleep(10000)
+
+        {:ok, pid} = :brod.get_producer(@brod_client, @topic, 0)
+
+        :brod.produce(pid, "msg1", "my first message") |> IO.inspect
+
+        IO.inspect "Produce message:"
+        :brod.produce(@brod_client, @topic, 0, "msg3", "my last message")
+        IO.puts "Produced"
       end
     )
 
@@ -42,7 +51,13 @@ defmodule MinimalBrodExample do
     children = [
       supervisor(
         MinimalBrodExample.Consumer.Supervisor,
-        [[topics: [@topic]]]
+        [
+          [
+            topics: [@topic],
+            consumer_group: @consumer_group,
+            client: @brod_client
+          ]
+        ]
       )
     ]
 

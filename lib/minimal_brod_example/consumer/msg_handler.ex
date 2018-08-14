@@ -1,4 +1,5 @@
 defmodule MinimalBrodExample.Consumer.MsgHandler do
+  require Logger
   use GenServer
 
   def start_link(params, opts \\ []) do
@@ -14,7 +15,7 @@ defmodule MinimalBrodExample.Consumer.MsgHandler do
   end
 
   def handle_message(_topic, _partition, msg, state) do
-    IO.puts "#{inspect msg}"
+    Logger.info "#{inspect msg}"
     {:ok, state}
   end
 end
