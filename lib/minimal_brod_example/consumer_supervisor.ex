@@ -4,7 +4,7 @@ defmodule MinimalBrodExample.ConsumerSupervisor do
   @behaviour :supervisor3
 
   @default_subscriper_config %GroupSubscriberConfig{
-    client: @brod_client,
+    client: nil,
     consumer_group: nil,
     topics: [],
     group_config: [],
@@ -18,12 +18,14 @@ defmodule MinimalBrodExample.ConsumerSupervisor do
   end
 
   def init(options) do
-    topics = Keyword.get(options, :topics)
-    consumer_group = Keyword.get(options, :consumer_group)
+    args = %{
+      topics: Keyword.get(options, :topics),
+      consumer_group: Keyword.get(options, :consumer_group),
+      client: Keyword.get(options, :client)}
 
     subscriber_config =
       @default_subscriper_config
-      |> Map.merge(%{topics: topics, consumer_group: consumer_group})
+      |> Map.merge(args)
       |> GroupSubscriberConfig.to_arg_list()
 
     children =
