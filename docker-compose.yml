@@ -1,13 +1,31 @@
 version: '2'
 services:
 
+  minimal-brod-example-s:
+    image: xofspades/minimal-brod-example:0.0.1
+    container_name: minimal-brod-example-c
+    build:
+      context: .
+      args:
+        - mix_env=dev
+    command: mix run --no-halt
+    volumes:
+      - ./resources:/resources
+      - .:/app
+      - ./config:/minimal_brod_example/config
+    depends_on:
+      - test-kafka-s
+      - test-zk4kafka-s
+    networks:
+      - "test-n"
+
   test-kafka-s:
     image: confluentinc/cp-kafka:4.1.0
     container_name: test-kafka-c
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: test-zk4kafka-s:38272 # test-zk4kafka-s:38272
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.2.110:38222 # PLAINTEXT://test-kafka-s:38222
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.16.28.171:38222 # PLAINTEXT://test-kafka-s:38222
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       #KAFKA_COMPRESSION_TYPE: 'lz4'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
