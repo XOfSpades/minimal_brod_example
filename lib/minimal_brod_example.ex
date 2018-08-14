@@ -14,7 +14,7 @@ defmodule MinimalBrodExample do
       {:restart_delay_seconds, 1}
     ]
 
-    kafka_endpoints = [{'localhost', 33222}]
+    kafka_endpoints = [{'localhost', 38222}]
 
     # Start basic brod client
     :ok =
