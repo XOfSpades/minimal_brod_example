@@ -29,7 +29,7 @@ defmodule MinimalBrodExample do
     # Define workers and child supervisors to be supervised
     children = [
       supervisor(
-        MinimalBrodExample.ConsumerSupervisor,
+        MinimalBrodExample.Consumer.Supervisor,
         [[topics: ["test_topic"]]]
       )
     ]

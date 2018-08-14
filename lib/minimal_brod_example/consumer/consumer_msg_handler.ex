@@ -1,4 +1,4 @@
-defmodule MinimalBrodExample.ConsumerMsgHandler do
+defmodule MinimalBrodExample.Consumer.MsgHandler do
   use GenServer
 
   def start_link(params, opts \\ []) do
