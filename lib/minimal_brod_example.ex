@@ -3,6 +3,9 @@ defmodule MinimalBrodExample do
 
   @brod_client :brod_kafka_base_server
 
+  @topic "test_topic"
+  @consumer_group "foobar"
+
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
@@ -30,7 +33,7 @@ defmodule MinimalBrodExample do
     children = [
       supervisor(
         MinimalBrodExample.ConsumerSupervisor,
-        [[topics: ["test_topic"]]]
+        [[topics: [@topic], consumer_group: @consumer_group]]
       )
     ]
 

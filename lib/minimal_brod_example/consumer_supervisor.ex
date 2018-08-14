@@ -3,12 +3,10 @@ defmodule MinimalBrodExample.ConsumerSupervisor do
 
   @behaviour :supervisor3
 
-  @brod_client :brod_kafka_base_server
-  @consumer_group "foo"
-
   @default_subscriper_config %GroupSubscriberConfig{
     client: @brod_client,
-    consumer_group: @consumer_group,
+    consumer_group: nil,
+    topics: [],
     group_config: [],
     consumer_config: [],
     callback_module: MinimalBrodExample.ConsumerMsgHandler,
@@ -21,10 +19,11 @@ defmodule MinimalBrodExample.ConsumerSupervisor do
 
   def init(options) do
     topics = Keyword.get(options, :topics)
+    consumer_group = Keyword.get(options, :consumer_group)
 
     subscriber_config =
       @default_subscriper_config
-      |> Map.put(:topics, topics)
+      |> Map.merge(%{topics: topics, consumer_group: consumer_group})
       |> GroupSubscriberConfig.to_arg_list()
 
     children =
