@@ -1,4 +1,4 @@
-defmodule MinimalBrodExample.GroupSubscriberConfig do
+defmodule MinimalBrodExample.Consumer.GroupSubscriberConfig do
   defstruct client: nil,
             consumer_group: nil,
             topics: [],

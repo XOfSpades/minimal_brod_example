@@ -1,5 +1,5 @@
-defmodule MinimalBrodExample.ConsumerSupervisor do
-  alias MinimalBrodExample.GroupSubscriberConfig
+defmodule MinimalBrodExample.Consumer.Supervisor do
+  alias MinimalBrodExample.Consumer.GroupSubscriberConfig
 
   @behaviour :supervisor3
 
@@ -11,7 +11,7 @@ defmodule MinimalBrodExample.ConsumerSupervisor do
     consumer_group: @consumer_group,
     group_config: [],
     consumer_config: [],
-    callback_module: MinimalBrodExample.ConsumerMsgHandler,
+    callback_module: MinimalBrodExample.Consumer.MsgHandler,
     call_back_init_args: []
   }
 
